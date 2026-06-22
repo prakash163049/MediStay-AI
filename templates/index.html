@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MediStay AI — XGBoost-powered hospital patient stay prediction tool. Predict short, medium, or long stay outcomes instantly." />
+  <title>MediStay AI | Hospital Stay Prediction</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-glass fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <div class="brand-icon">
+          <i class="bi bi-activity"></i>
+        </div>
+        <span class="brand-text">MediStay <span class="brand-ai">AI</span></span>
+      </a>
+
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list text-white fs-4"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center gap-2">
+          <li class="nav-item"><a class="nav-link" href="#hero">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#predict">Predict</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item">
+            <a class="btn btn-primary-glow ms-2" href="#predict">Try Now <i class="bi bi-arrow-right"></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════ HERO -->
+  <section id="hero" class="hero-section">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="hero-grid"></div>
+
+    <div class="container position-relative z-1">
+      <div class="row align-items-center min-vh-100">
+        <div class="col-lg-7" data-aos="fade-right">
+          <div class="hero-badge mb-4">
+            <span class="badge-dot"></span>
+            <span>Powered by XGBoost Machine Learning</span>
+          </div>
+
+          <h1 class="hero-title">
+            Predict Hospital<br />
+            <span class="gradient-text">Patient Stay</span><br />
+            with AI Precision
+          </h1>
+
+          <p class="hero-subtitle mt-4">
+            MediStay AI uses a trained XGBoost classifier to predict whether a patient
+            will have a <strong>Short</strong>, <strong>Medium</strong>, or <strong>Long</strong>
+            hospital stay — helping healthcare professionals plan resources effectively.
+          </p>
+
+          <div class="hero-actions mt-5 d-flex gap-3 flex-wrap">
+            <a href="#predict" class="btn btn-hero-primary">
+              <i class="bi bi-cpu me-2"></i>Run Prediction
+            </a>
+            <a href="#about" class="btn btn-hero-secondary">
+              <i class="bi bi-info-circle me-2"></i>Learn More
+            </a>
+          </div>
+
+          <div class="hero-stats mt-5 d-flex gap-4 flex-wrap">
+            <div class="stat-pill">
+              <span class="stat-value">66.97%</span>
+              <span class="stat-label">Model Accuracy</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-value">318K+</span>
+              <span class="stat-label">Training Records</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-value">15</span>
+              <span class="stat-label">Input Features</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5 d-none d-lg-flex justify-content-center" data-aos="fade-left">
+          <div class="hero-card-float">
+            <div class="float-card glass-card">
+              <div class="float-icon"><i class="bi bi-heart-pulse-fill text-danger"></i></div>
+              <div>
+                <div class="float-label">Patient Status</div>
+                <div class="float-value">Analyzed</div>
+              </div>
+              <div class="float-badge bg-success">Live</div>
+            </div>
+
+            <div class="hero-visual-ring">
+              <div class="ring ring-1"></div>
+              <div class="ring ring-2"></div>
+              <div class="ring ring-3"></div>
+              <div class="hero-icon-center">
+                <i class="bi bi-hospital-fill"></i>
+              </div>
+            </div>
+
+            <div class="float-card glass-card float-card-bottom">
+              <div class="float-icon text-info"><i class="bi bi-graph-up-arrow"></i></div>
+              <div>
+                <div class="float-label">XGBoost Model</div>
+                <div class="float-value">500 Estimators</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <div class="scroll-dot"></div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ FEATURES -->
+  <section id="features" class="features-section section-pad">
+    <div class="container">
+      <div class="section-header text-center mb-5" data-aos="fade-up">
+        <div class="section-tag">Why MediStay AI?</div>
+        <h2 class="section-title">Built for Healthcare Intelligence</h2>
+        <p class="section-subtitle">Advanced machine learning meets clinical decision support</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+          <div class="feature-card">
+            <div class="feature-icon-wrap icon-blue"><i class="bi bi-cpu-fill"></i></div>
+            <h5 class="feature-title">XGBoost Engine</h5>
+            <p class="feature-desc">State-of-the-art gradient boosting trained on 318K+ real hospital records for robust predictions.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-card">
+            <div class="feature-icon-wrap icon-cyan"><i class="bi bi-lightning-charge-fill"></i></div>
+            <h5 class="feature-title">Instant Results</h5>
+            <p class="feature-desc">Get patient stay predictions in milliseconds with full probability distributions across all categories.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-card">
+            <div class="feature-icon-wrap icon-green"><i class="bi bi-shield-check-fill"></i></div>
+            <h5 class="feature-title">Simple & Advanced</h5>
+            <p class="feature-desc">Switch between easy Simple Mode for quick demos and full Advanced Mode for power users.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-card">
+            <div class="feature-icon-wrap icon-purple"><i class="bi bi-bar-chart-fill"></i></div>
+            <h5 class="feature-title">Probability Scores</h5>
+            <p class="feature-desc">View confidence levels for each outcome category to support clinical decision-making with full transparency.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ ACCURACY CARD -->
+  <section class="accuracy-section section-pad">
+    <div class="container">
+      <div class="accuracy-banner glass-card-dark" data-aos="zoom-in">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-4 text-center">
+            <div class="accuracy-ring">
+              <svg viewBox="0 0 120 120" class="accuracy-svg">
+                <circle cx="60" cy="60" r="54" class="ring-bg" />
+                <circle cx="60" cy="60" r="54" class="ring-fill" stroke-dasharray="338.63" stroke-dashoffset="111.93" />
+              </svg>
+              <div class="accuracy-text">
+                <span class="accuracy-value">66.97%</span>
+                <span class="accuracy-label">Accuracy</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="accuracy-info">
+              <div class="badge-xgb mb-3"><i class="bi bi-cpu me-2"></i>XGBoost Powered</div>
+              <h3 class="accuracy-title">Model Performance Metrics</h3>
+              <p class="accuracy-desc">Trained with 500 estimators, max depth 8, learning rate 0.1, and native categorical feature support on a balanced multi-class dataset.</p>
+              <div class="metrics-grid mt-4">
+                <div class="metric-item"><i class="bi bi-layers-fill text-info"></i><div><div class="metric-val">500</div><div class="metric-key">Estimators</div></div></div>
+                <div class="metric-item"><i class="bi bi-diagram-3-fill text-warning"></i><div><div class="metric-val">8</div><div class="metric-key">Max Depth</div></div></div>
+                <div class="metric-item"><i class="bi bi-speedometer2 text-success"></i><div><div class="metric-val">0.1</div><div class="metric-key">Learning Rate</div></div></div>
+                <div class="metric-item"><i class="bi bi-database-fill text-primary"></i><div><div class="metric-val">318K</div><div class="metric-key">Training Records</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ PREDICTION FORM -->
+  <section id="predict" class="predict-section section-pad">
+    <div class="container">
+      <div class="section-header text-center mb-5" data-aos="fade-up">
+        <div class="section-tag">AI Prediction Engine</div>
+        <h2 class="section-title">Predict Patient Stay Duration</h2>
+        <p class="section-subtitle">Fill in the patient and hospital details to get an instant AI prediction</p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-10">
+
+          <!-- ── Mode Toggle + Utility Buttons ── -->
+          <div class="form-toolbar d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+            <div class="mode-toggle-wrap">
+              <div class="mode-toggle" id="modeToggle" role="group" aria-label="Form mode">
+                <button type="button" class="mode-btn active" id="btnSimple" data-mode="simple">
+                  <i class="bi bi-person-check me-1"></i>Simple Mode
+                </button>
+                <button type="button" class="mode-btn" id="btnAdvanced" data-mode="advanced">
+                  <i class="bi bi-sliders me-1"></i>Advanced Mode
+                </button>
+              </div>
+              <div class="mode-badge-info mt-1" id="modeBadgeInfo">
+                <i class="bi bi-info-circle me-1"></i>
+                <span id="modeInfoText">7 easy fields — hospital details auto-filled</span>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 flex-wrap">
+              <div class="dropdown">
+                <button class="btn btn-sample-data dropdown-toggle" type="button" id="sampleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-magic me-1"></i>Fill Sample Data
+                </button>
+                <ul class="dropdown-menu sample-dropdown-menu" aria-labelledby="sampleDropdown">
+                  <li><h6 class="dropdown-header">Choose a sample scenario</h6></li>
+                  <li><a class="dropdown-item sample-item" href="#" data-sample="short"><span class="sample-dot dot-green"></span>Short Stay (0–30 days)</a></li>
+                  <li><a class="dropdown-item sample-item" href="#" data-sample="medium"><span class="sample-dot dot-orange"></span>Medium Stay (31–70 days)</a></li>
+                  <li><a class="dropdown-item sample-item" href="#" data-sample="long"><span class="sample-dot dot-red"></span>Long Stay (71+ days)</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Auto-fill notice (shown when simple mode auto-fills fields) ── -->
+          <div id="autofillNotice" class="autofill-notice d-none mb-3">
+            <i class="bi bi-magic me-2"></i>
+            <span>Some fields were auto-filled from hospital data — switch to <strong>Advanced Mode</strong> to edit them.</span>
+            <button type="button" class="autofill-close" id="autofillClose">&times;</button>
+          </div>
+
+          <form id="predictionForm" class="prediction-form glass-card-dark" novalidate>
+
+            <!-- ════════════════════════════════ SIMPLE MODE FIELDS -->
+            <div id="simpleModeFields" class="form-section">
+              <div class="form-section-header">
+                <div class="form-section-icon icon-cyan-bg"><i class="bi bi-person-fill"></i></div>
+                <div>
+                  <h6 class="form-section-title">Patient & Clinical Details</h6>
+                  <p class="form-section-sub">Fill in the clinical information — hospital details will be auto-configured</p>
+                </div>
+              </div>
+
+              <div class="row g-3 mt-2">
+
+                <!-- Department -->
+                <div class="col-md-6">
+                  <label class="form-label-custom" for="s_Department">
+                    Department
+                    <span class="tooltip-icon" data-bs-toggle="tooltip" title="Select the hospital department the patient is admitted to."><i class="bi bi-question-circle"></i></span>
+                  </label>
+                  <select class="form-control-custom" id="s_Department" name="s_Department" required>
+                    <option value="" disabled selected>Select department</option>
+                    <option value="TB &amp; Chest disease">🫁 TB &amp; Chest Disease</option>
+                    <option value="anesthesia">💉 Anesthesia</option>
+                    <option value="gynecology">👩‍⚕️ Gynecology</option>
+                    <option value="radiotherapy">☢️ Radiotherapy</option>
+                    <option value="surgery">🔪 Surgery</option>
+                  </select>
+                </div>
+
+                <!-- Type of Admission -->
+                <div class="col-md-6">
+                  <label class="form-label-custom" for="s_Type_of_Admission">
+                    How was the patient admitted?
+                    <span class="tooltip-icon" data-bs-toggle="tooltip" title="Emergency = accident/sudden illness. Trauma = serious injury. Urgent = critical but scheduled."><i class="bi bi-question-circle"></i></span>
+                  </label>
+                  <select class="form-control-custom" id="s_Type_of_Admission" name="s_Type_of_Admission" required>
+                    <option value="" disabled selected>Select admission type</option>
+                    <option value="Emergency">🚨 Emergency (sudden, unplanned)</option>
+                    <option value="Trauma">🩹 Trauma (injury / accident)</option>
+                    <option value="Urgent">⚠️ Urgent (critical but planned)</option>
+                  </select>
+                </div>
+
+                <!-- Severity of Illness -->
+                <div class="col-md-6">
+                  <label class="form-label-custom" for="s_Severity_of_Illness">
+                    Severity of Illness
+                    <span class="tooltip-icon" data-bs-toggle="tooltip" title="Minor = manageable condition. Moderate = requires significant care. Extreme = life-threatening or complex."><i class="bi bi-question-circle"></i></span>
+                  </label>
+                  <select class="form-control-custom" id="s_Severity_of_Illness" name="s_Severity_of_Illness" required>
+                    <option value="" disabled selected>Select severity</option>
+                    <option value="Minor">🟢 Minor — manageable condition</option>
+                    <option value="Moderate">🟡 Moderate — significant care needed</option>
+                    <option value="Extreme">🔴 Extreme — life-threatening / complex</option>
+                  </select>
+                </div>
+
+                <!-- Age Group -->
+                <div class="col-md-6">
+                  <label class="form-label-custom" for="s_Age">
+                    Patient's Age Group
+                    <span class="tooltip-icon" data-bs-toggle="tooltip" title="Select the age bracket that matches the patient."><i class="bi bi-question-circle"></i></span>
+                  </label>
+                  <select class="form-control-custom" id="s_Age" name="s_Age" required>
+                    <option value="" disabled selected>Select age group</option>
+                    <option value="0-10">0–10 years</option>
+                    <option value="Nov-20">11–20 years</option>
+                    <option value="21-30">21–30 years</option>
+                    <option value="31-40">31–40 years</option>
+                    <option value="41-50">41–50 years</option>
+                    <option value="51-60">51–60 years</option>
+                    <option value="61-70">61–70 years</option>
+                    <option value="71-80">71–80 years</option>
+                    <option value="81-90">81–90 years</option>
+                    <option value="91-100">91–100 years</option>
+                  </select>
+                </div>
+
+                <!-- Visitors with Patient -->
+                <div class="col-md-4">
+                  <label class="form-label-custom" for="s_Visitors_with_Patient">
+                    Visitors with Patient
+                    <span class="tooltip-icon" data-bs-toggle="tooltip" title="Number of family members or friends accompanying the patient at the time of admission."><i class="bi bi-question-circle"></i></span>
+                  </label>
+                  <input type="number" class="form-control-custom" id="s_Visitors_with_Patient" name="s_Visitors_with_Patient"
+                    min="0" max="32" placeholder="e.g. 2" required />
+                  <div class="field-hint">Number of accompanying family members (0–32)</div>
+                </div>
+
+                <!-- Bed Grade -->
+                <div class="col-md-4">
+                  <label class="form-label-custom" for="s_Bed_Grade">
+                    Bed / Ward Grade
+                    <span class="tooltip-icon" data-bs-toggle="tooltip" title="Grade 1 = basic shared ward. Grade 2 = semi-private. Grade 3 = private room. Grade 4 = premium suite."><i class="bi bi-question-circle"></i></span>
+                  </label>
+                  <select class="form-control-custom" id="s_Bed_Grade" name="s_Bed_Grade" required>
+                    <option value="" disabled selected>Select bed grade</option>
+                    <option value="1">Grade 1 — Basic Shared Ward</option>
+                    <option value="2">Grade 2 — Semi-Private Room</option>
+                    <option value="3">Grade 3 — Private Room</option>
+                    <option value="4">Grade 4 — Premium Suite</option>
+                  </select>
+                </div>
+
+                <!-- Admission Deposit -->
+                <div class="col-md-4">
+                  <label class="form-label-custom" for="s_Admission_Deposit">
+                    Admission Deposit (₹)
+                    <span class="tooltip-icon" data-bs-toggle="tooltip" title="The upfront payment amount collected from the patient at admission. Typically ₹1,800–₹11,008."><i class="bi bi-question-circle"></i></span>
+                  </label>
+                  <input type="number" class="form-control-custom" id="s_Admission_Deposit" name="s_Admission_Deposit"
+                    min="1800" max="11008" placeholder="e.g. 4500" required />
+                  <div class="field-hint">Upfront deposit amount (₹1,800 – ₹11,008)</div>
+                </div>
+
+              </div>
+            </div><!-- /simpleModeFields -->
+
+            <!-- ════════════════════════════════ ADVANCED MODE FIELDS -->
+            <div id="advancedModeFields" class="d-none">
+
+              <!-- HOSPITAL INFO -->
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-icon"><i class="bi bi-hospital-fill"></i></div>
+                  <div>
+                    <h6 class="form-section-title">Hospital Information</h6>
+                    <p class="form-section-sub">Select a hospital — related fields will auto-fill from dataset</p>
+                  </div>
+                </div>
+
+                <div class="row g-3 mt-2">
+
+                  <!-- Hospital Code -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Hospital_code">
+                      Hospital
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Choose the hospital. Related fields (type, city, region, ward) will auto-fill."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom" id="Hospital_code" name="Hospital_code" required>
+                      <option value="" disabled selected>Select hospital</option>
+                      <option value="1">Hospital 1 — Community, North Region</option>
+                      <option value="2">Hospital 2 — Teaching, South Region</option>
+                      <option value="3">Hospital 3 — Teaching, South Region</option>
+                      <option value="4">Hospital 4 — General, North Region</option>
+                      <option value="5">Hospital 5 — General, North Region</option>
+                      <option value="6">Hospital 6 — General, North Region</option>
+                      <option value="7">Hospital 7 — General, North Region</option>
+                      <option value="8">Hospital 8 — Teaching, South Region</option>
+                      <option value="9">Hospital 9 — Community, South Region</option>
+                      <option value="10">Hospital 10 — Specialty Clinic, North Region</option>
+                      <option value="11">Hospital 11 — Multi-Specialty, Central Region</option>
+                      <option value="12">Hospital 12 — General, Central Region</option>
+                      <option value="13">Hospital 13 — General, South Region</option>
+                      <option value="14">Hospital 14 — General, North Region</option>
+                      <option value="15">Hospital 15 — Teaching, South Region</option>
+                      <option value="16">Hospital 16 — Teaching, South Region</option>
+                      <option value="17">Hospital 17 — Specialty Clinic, North Region</option>
+                      <option value="18">Hospital 18 — Community, Central Region</option>
+                      <option value="19">Hospital 19 — General, Central Region</option>
+                      <option value="20">Hospital 20 — Multi-Specialty, Central Region</option>
+                      <option value="21">Hospital 21 — Teaching, South Region</option>
+                      <option value="22">Hospital 22 — Government, Central Region</option>
+                      <option value="23">Hospital 23 — General, North Region</option>
+                      <option value="24">Hospital 24 — General, North Region</option>
+                      <option value="25">Hospital 25 — Specialty Clinic, North Region</option>
+                      <option value="26">Hospital 26 — Multi-Specialty, Central Region</option>
+                      <option value="27">Hospital 27 — General, Central Region</option>
+                      <option value="28">Hospital 28 — Multi-Specialty, North Region</option>
+                      <option value="29">Hospital 29 — General, North Region</option>
+                      <option value="30">Hospital 30 — Teaching, South Region</option>
+                      <option value="31">Hospital 31 — Teaching, South Region</option>
+                      <option value="32">Hospital 32 — District, Central Region</option>
+                    </select>
+                  </div>
+
+                  <!-- Hospital Type -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Hospital_type_code">
+                      Hospital Type
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Auto-filled when you select a hospital. Can be overridden manually."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom autofilled" id="Hospital_type_code" name="Hospital_type_code" required>
+                      <option value="" disabled selected>Auto-fills on hospital select</option>
+                      {% for val, label in label_maps['Hospital_type_code'].items() %}
+                      <option value="{{ val }}">{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- City Code Hospital -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="City_Code_Hospital">
+                      Hospital City
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Auto-filled when you select a hospital (city codes 1–13)."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom autofilled" id="City_Code_Hospital" name="City_Code_Hospital" required>
+                      <option value="" disabled selected>Auto-fills on hospital select</option>
+                      {% for i in range(1, 14) %}
+                      <option value="{{ i }}">City {{ i }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- Hospital Region -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Hospital_region_code">
+                      Hospital Region
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Geographic region of the hospital. Auto-filled from hospital selection."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom autofilled" id="Hospital_region_code" name="Hospital_region_code" required>
+                      <option value="" disabled selected>Auto-fills on hospital select</option>
+                      {% for val, label in label_maps['Hospital_region_code'].items() %}
+                      <option value="{{ val }}">{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- Extra Rooms -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Available_Extra_Rooms_in_Hospital">
+                      Extra Rooms Available
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Number of extra/spare rooms available in the hospital at admission time."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <input type="number" class="form-control-custom autofilled" id="Available_Extra_Rooms_in_Hospital"
+                      name="Available_Extra_Rooms_in_Hospital" min="0" max="24" placeholder="Auto-fills (0–24)" required />
+                    <div class="field-hint">Spare rooms in hospital (0–24). Auto-filled from hospital.</div>
+                  </div>
+
+                  <!-- Department -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Department">Department</label>
+                    <select class="form-control-custom" id="Department" name="Department" required>
+                      <option value="" disabled selected>Select department</option>
+                      <option value="TB &amp; Chest disease">🫁 TB &amp; Chest Disease</option>
+                      <option value="anesthesia">💉 Anesthesia</option>
+                      <option value="gynecology">👩‍⚕️ Gynecology</option>
+                      <option value="radiotherapy">☢️ Radiotherapy</option>
+                      <option value="surgery">🔪 Surgery</option>
+                    </select>
+                  </div>
+
+                  <!-- Ward Type -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Ward_Type">
+                      Ward Type
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Auto-filled from hospital. ICU, General, Semi-Private, etc."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom autofilled" id="Ward_Type" name="Ward_Type" required>
+                      <option value="" disabled selected>Auto-fills on hospital select</option>
+                      {% for val, label in label_maps['Ward_Type'].items() %}
+                      <option value="{{ val }}">{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- Ward Facility Code -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Ward_Facility_Code">
+                      Ward Facility Level
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Facility quality level of the ward, from Basic to Elite."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom autofilled" id="Ward_Facility_Code" name="Ward_Facility_Code" required>
+                      <option value="" disabled selected>Auto-fills on hospital select</option>
+                      {% for val, label in label_maps['Ward_Facility_Code'].items() %}
+                      <option value="{{ val }}">{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- Bed Grade -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Bed_Grade">
+                      Bed / Ward Grade
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Grade 1 = basic shared. Grade 2 = semi-private. Grade 3 = private. Grade 4 = premium."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom" id="Bed_Grade" name="Bed_Grade" required>
+                      <option value="" disabled selected>Select grade</option>
+                      <option value="1">Grade 1 — Basic Shared Ward</option>
+                      <option value="2">Grade 2 — Semi-Private Room</option>
+                      <option value="3">Grade 3 — Private Room</option>
+                      <option value="4">Grade 4 — Premium Suite</option>
+                    </select>
+                  </div>
+
+                </div>
+              </div><!-- /hospital section -->
+
+              <div class="form-divider"></div>
+
+              <!-- PATIENT INFO -->
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-icon icon-cyan-bg"><i class="bi bi-person-fill"></i></div>
+                  <div>
+                    <h6 class="form-section-title">Patient Information</h6>
+                    <p class="form-section-sub">Clinical and demographic details about the patient</p>
+                  </div>
+                </div>
+
+                <div class="row g-3 mt-2">
+
+                  <!-- City Code Patient -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="City_Code_Patient">
+                      Patient's Home City
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="City code of the patient's home location (1–38)."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <select class="form-control-custom" id="City_Code_Patient" name="City_Code_Patient" required>
+                      <option value="" disabled selected>Select city</option>
+                      {% for i in range(1, 39) %}
+                      <option value="{{ i }}">City {{ i }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- Type of Admission -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Type_of_Admission">How was the patient admitted?</label>
+                    <select class="form-control-custom" id="Type_of_Admission" name="Type_of_Admission" required>
+                      <option value="" disabled selected>Select admission type</option>
+                      <option value="Emergency">🚨 Emergency (sudden, unplanned)</option>
+                      <option value="Trauma">🩹 Trauma (injury / accident)</option>
+                      <option value="Urgent">⚠️ Urgent (critical but planned)</option>
+                    </select>
+                  </div>
+
+                  <!-- Severity of Illness -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Severity_of_Illness">Severity of Illness</label>
+                    <select class="form-control-custom" id="Severity_of_Illness" name="Severity_of_Illness" required>
+                      <option value="" disabled selected>Select severity</option>
+                      <option value="Minor">🟢 Minor — manageable</option>
+                      <option value="Moderate">🟡 Moderate — significant care needed</option>
+                      <option value="Extreme">🔴 Extreme — life-threatening</option>
+                    </select>
+                  </div>
+
+                  <!-- Visitors with Patient -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Visitors_with_Patient">
+                      Visitors with Patient
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="Number of family members accompanying the patient."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <input type="number" class="form-control-custom" id="Visitors_with_Patient"
+                      name="Visitors_with_Patient" min="0" max="32" placeholder="e.g. 2" required />
+                    <div class="field-hint">Family members present (0–32)</div>
+                  </div>
+
+                  <!-- Age -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Age">Patient's Age Group</label>
+                    <select class="form-control-custom" id="Age" name="Age" required>
+                      <option value="" disabled selected>Select age group</option>
+                      <option value="0-10">0–10 years</option>
+                      <option value="Nov-20">11–20 years</option>
+                      <option value="21-30">21–30 years</option>
+                      <option value="31-40">31–40 years</option>
+                      <option value="41-50">41–50 years</option>
+                      <option value="51-60">51–60 years</option>
+                      <option value="61-70">61–70 years</option>
+                      <option value="71-80">71–80 years</option>
+                      <option value="81-90">81–90 years</option>
+                      <option value="91-100">91–100 years</option>
+                    </select>
+                  </div>
+
+                  <!-- Admission Deposit -->
+                  <div class="col-md-4">
+                    <label class="form-label-custom" for="Admission_Deposit">
+                      Admission Deposit (₹)
+                      <span class="tooltip-icon" data-bs-toggle="tooltip" title="The initial upfront deposit collected at the time of admission."><i class="bi bi-question-circle"></i></span>
+                    </label>
+                    <input type="number" class="form-control-custom" id="Admission_Deposit" name="Admission_Deposit"
+                      min="1800" max="11008" placeholder="e.g. 4500" required />
+                    <div class="field-hint">Upfront deposit amount (₹1,800 – ₹11,008)</div>
+                  </div>
+
+                </div>
+              </div><!-- /patient section -->
+            </div><!-- /advancedModeFields -->
+
+            <!-- ── Submit Row ── -->
+            <div class="form-submit-row">
+              <button type="submit" id="submitBtn" class="btn btn-predict-main">
+                <span class="btn-normal-state">
+                  <i class="bi bi-cpu me-2"></i>Predict Stay Duration
+                </span>
+                <span class="btn-loading-state d-none">
+                  <span class="spinner-border spinner-border-sm me-2"></span>Analyzing...
+                </span>
+              </button>
+              <button type="button" class="btn btn-reset-form" id="resetBtn">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
+              </button>
+            </div>
+
+          </form><!-- /predictionForm -->
+        </div>
+      </div>
+
+      <!-- ─── RESULT CARD -->
+      <div class="row justify-content-center mt-4">
+        <div class="col-lg-10">
+          <div id="resultCard" class="result-card glass-card-dark d-none">
+
+            <div id="loadingState" class="loading-state d-none">
+              <div class="loading-orb">
+                <div class="orb-ring ring-a"></div>
+                <div class="orb-ring ring-b"></div>
+                <div class="orb-ring ring-c"></div>
+                <i class="bi bi-cpu-fill orb-icon"></i>
+              </div>
+              <h5 class="mt-4">Analyzing Patient Data...</h5>
+              <p class="text-muted">XGBoost model is processing your inputs</p>
+            </div>
+
+            <div id="resultState" class="result-state">
+              <div class="row align-items-center g-4">
+                <div class="col-lg-4 text-center">
+                  <div id="resultBadge" class="result-badge-large">
+                    <i id="resultIcon" class="bi bi-clock-history result-icon"></i>
+                    <div id="resultLabel" class="result-label-text">—</div>
+                    <div id="resultRange" class="result-range-text">—</div>
+                  </div>
+                </div>
+
+                <div class="col-lg-8">
+                  <div class="result-details">
+                    <h4 class="result-heading">Prediction Result</h4>
+                    <p id="resultDescription" class="result-desc text-muted"></p>
+
+                    <div class="prob-bars mt-4">
+                      <div class="prob-row">
+                        <div class="prob-label"><span class="prob-dot dot-green"></span>Short Stay (0–30 days)</div>
+                        <div class="prob-bar-wrap"><div id="shortBar" class="prob-bar bar-green" style="width:0%"></div></div>
+                        <div id="shortPct" class="prob-pct">0%</div>
+                      </div>
+                      <div class="prob-row">
+                        <div class="prob-label"><span class="prob-dot dot-orange"></span>Medium Stay (31–70 days)</div>
+                        <div class="prob-bar-wrap"><div id="mediumBar" class="prob-bar bar-orange" style="width:0%"></div></div>
+                        <div id="mediumPct" class="prob-pct">0%</div>
+                      </div>
+                      <div class="prob-row">
+                        <div class="prob-label"><span class="prob-dot dot-red"></span>Long Stay (71+ days)</div>
+                        <div class="prob-bar-wrap"><div id="longBar" class="prob-bar bar-red" style="width:0%"></div></div>
+                        <div id="longPct" class="prob-pct">0%</div>
+                      </div>
+                    </div>
+
+                    <div class="result-footer mt-4">
+                      <span class="badge-xgb"><i class="bi bi-cpu me-1"></i>XGBoost Classifier</span>
+                      <span class="result-timestamp" id="resultTimestamp"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ ABOUT MODEL -->
+  <section id="about" class="about-section section-pad">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6" data-aos="fade-right">
+          <div class="section-tag">About the Model</div>
+          <h2 class="section-title mt-2">XGBoost Classification<br />for Clinical Outcomes</h2>
+          <p class="section-subtitle mt-3">
+            MediStay AI uses the XGBoost (Extreme Gradient Boosting) algorithm to classify hospital
+            stays into three outcome categories based on 15 clinical and administrative features.
+          </p>
+
+          <div class="about-points mt-4">
+            <div class="about-point">
+              <div class="ap-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
+              <div>
+                <strong>Simple & Advanced Modes</strong>
+                <p>Simple Mode needs just 7 plain-English fields. Advanced Mode exposes all 15 features for full control.</p>
+              </div>
+            </div>
+            <div class="about-point">
+              <div class="ap-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
+              <div>
+                <strong>Smart Auto-Fill</strong>
+                <p>Hospital-related fields auto-populate from real dataset patterns when you select a hospital.</p>
+              </div>
+            </div>
+            <div class="about-point">
+              <div class="ap-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
+              <div>
+                <strong>Multi-Class Classification</strong>
+                <p>Trained with the <code>multi:softmax</code> objective on 318,438 real patient records.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="stay-classes-card glass-card-dark">
+            <h6 class="mb-4 text-white fw-600">Prediction Categories</h6>
+
+            <div class="stay-class-item stay-short">
+              <div class="stay-icon"><i class="bi bi-check2-circle"></i></div>
+              <div class="stay-info">
+                <div class="stay-name">Short Stay</div>
+                <div class="stay-desc">0–30 days · Minimal intervention needed</div>
+              </div>
+              <div class="stay-badge badge-short">Low Risk</div>
+            </div>
+
+            <div class="stay-class-item stay-medium">
+              <div class="stay-icon"><i class="bi bi-exclamation-circle"></i></div>
+              <div class="stay-info">
+                <div class="stay-name">Medium Stay</div>
+                <div class="stay-desc">31–70 days · Moderate resources required</div>
+              </div>
+              <div class="stay-badge badge-medium">Moderate</div>
+            </div>
+
+            <div class="stay-class-item stay-long">
+              <div class="stay-icon"><i class="bi bi-x-circle"></i></div>
+              <div class="stay-info">
+                <div class="stay-name">Long Stay</div>
+                <div class="stay-desc">71+ days · Intensive care required</div>
+              </div>
+              <div class="stay-badge badge-long">High Risk</div>
+            </div>
+
+            <div class="mt-4 pt-3 border-top border-white border-opacity-10">
+              <h6 class="text-white-50 small mb-3 text-uppercase letter-spacing-1">Simple Mode Defaults</h6>
+              <p class="text-white-50 small mb-2">When using Simple Mode, these values are auto-configured:</p>
+              <div class="feature-tags">
+                <span class="feature-tag">Hospital #8 (default)</span>
+                <span class="feature-tag">Type: Teaching</span>
+                <span class="feature-tag">City 3 (hospital)</span>
+                <span class="feature-tag">South Region</span>
+                <span class="feature-tag">3 Extra Rooms</span>
+                <span class="feature-tag">General Ward</span>
+                <span class="feature-tag">Elite Facility</span>
+                <span class="feature-tag">Patient City 7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-glow"></div>
+    <div class="container position-relative">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <div class="brand-icon brand-icon-sm"><i class="bi bi-activity"></i></div>
+            <span class="brand-text">MediStay <span class="brand-ai">AI</span></span>
+          </div>
+          <p class="footer-desc">AI-powered hospital patient stay prediction using XGBoost machine learning technology.</p>
+        </div>
+        <div class="col-lg-4 text-center">
+          <div class="footer-badge"><i class="bi bi-cpu me-2"></i>XGBoost · Flask · Bootstrap 5</div>
+          <p class="footer-accuracy mt-2">Model Accuracy: <strong class="text-info">66.97%</strong></p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <p class="footer-developed">Developed with <i class="bi bi-heart-fill text-danger mx-1"></i> by</p>
+          <h6 class="footer-name">Prakash Sarvaiya</h6>
+          <p class="footer-year text-muted">© 2026 MediStay AI. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
